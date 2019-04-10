@@ -16,7 +16,7 @@ public class Crime {
     }
 
     public void setTitle(String title) {
-        this.mTitle = mTitle;
+        this.mTitle = title;
     }
 
     private String mTitle;  //title of the crime
