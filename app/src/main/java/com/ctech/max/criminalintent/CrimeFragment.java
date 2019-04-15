@@ -14,17 +14,38 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.util.UUID;
+
 public class CrimeFragment extends Fragment {
+
+    //this is a constant string we'll use to store and retrieve the crimeId from the bundle
+    private static final String BUNDLE_CRIME_ID = "bundle_crime_id";
 
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
 
+    public static CrimeFragment newInstance(UUID crimeId) {
+
+        // create a bundle and store the crimeid
+        Bundle myBundle = new Bundle();
+        myBundle.putSerializable(BUNDLE_CRIME_ID, crimeId);
+
+        // create the new fragment and store the bundle
+        CrimeFragment myFragment = new CrimeFragment();
+        myFragment.setArguments(myBundle);
+        return myFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCrime = new Crime();
+
+        //get the actual crimeId out of the bundle saved in NewInstance
+        UUID crimeId = (UUID) getArguments().getSerializable(BUNDLE_CRIME_ID);
+        //find the right crime based off the crimeid
+        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
 
     @Nullable
@@ -33,6 +54,7 @@ public class CrimeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
 
         mTitleField = v.findViewById(R.id.crime_title);
+        mTitleField.setText(mCrime.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -55,6 +77,7 @@ public class CrimeFragment extends Fragment {
         mDateButton.setEnabled(false);
 
         mSolvedCheckBox = v.findViewById(R.id.crime_solved);
+        mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
