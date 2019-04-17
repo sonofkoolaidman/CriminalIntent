@@ -77,7 +77,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             //create a new intent that automatically stores the crimeid
-            Intent myIntent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            Intent myIntent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(myIntent);
         }
 
