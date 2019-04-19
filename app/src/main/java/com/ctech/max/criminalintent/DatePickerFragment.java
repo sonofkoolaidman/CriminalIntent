@@ -1,7 +1,10 @@
 package com.ctech.max.criminalintent;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,8 +15,12 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class DatePickerFragment extends DialogFragment {
+
+    //this is the key into the intent where we will store the date to pass back into CrimeFragment
+    public static final String EXTRA_DATE = "com.ctech.max.criminalintent.date";
 
     //this is the key into the bundle where we will store the date
     private static final String ARG_DATE = "crime_date";
@@ -54,7 +61,28 @@ public class DatePickerFragment extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setTitle(R.string.date_picker_title)
-                .setPositiveButton(android.R.string.ok, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int year = mDatePicker.getYear();
+                        int month = mDatePicker.getMonth();
+                        int day = mDatePicker.getDayOfMonth();
+                        Date myDate = new GregorianCalendar(year, month, day).getTime();
+                        sendResult(Activity.RESULT_OK, myDate);
+
+                    }
+                })
                 .create();
+    }
+
+    private void sendResult(int resultCode, Date date) {
+        if (getTargetFragment() == null) {
+            return;
+        }
+
+        Intent myIntent = new Intent();
+        myIntent.putExtra(EXTRA_DATE, date);
+
+        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, myIntent);
     }
 }
