@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -56,7 +57,20 @@ public class CrimeListFragment extends Fragment {
     }
 
     // this method automatically gets called if the user selects a menu item
-    // it's job is to 
+    // it's job is to figure out what was selected and deal appropriately
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_crime:
+                Crime newCrime = new Crime();
+                CrimeLab.get(getActivity()).addCrime(newCrime);
+                Intent myIntent = CrimePagerActivity.newIntent(getActivity(), newCrime.getId());
+                startActivity(myIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
