@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class CrimeListFragment extends Fragment {
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+    private boolean mSubtitleVisible;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +56,13 @@ public class CrimeListFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime_list, menu);
+
+        MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
+        if (mSubtitleVisible) {
+            subtitleItem.setTitle(R.string.hide_subtitle);
+        } else {
+            subtitleItem.setTitle(R.string.show_subtitle);
+        }
     }
 
     // this method automatically gets called if the user selects a menu item
@@ -67,9 +76,36 @@ public class CrimeListFragment extends Fragment {
                 Intent myIntent = CrimePagerActivity.newIntent(getActivity(), newCrime.getId());
                 startActivity(myIntent);
                 return true;
+            case R.id.show_subtitle:
+
+                //toggle the visibility of the subtitle
+                if (mSubtitleVisible) {
+                    mSubtitleVisible = false;
+                } else {
+                    mSubtitleVisible = true;
+                }
+                //invalidate the options menu so it forces a recreate
+                getActivity().invalidateOptionsMenu();
+                updateSubtitle();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    // create a subtitle that shows the number of crimes (if it fits)
+    private void updateSubtitle() {
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        int crimeCount = crimeLab.getCrimes().size();
+        String subtitle = getString(R.string.subtitle_format, crimeCount); // pass in the crimecount and format it
+
+        //if it shouldn't be visible, just set it to null
+        if (!mSubtitleVisible) {
+            subtitle = null;
+        }
+
+        AppCompatActivity thisActivity = (AppCompatActivity) getActivity();
+        thisActivity.getSupportActionBar().setSubtitle(subtitle);
     }
 
     private void updateUI() {
@@ -83,6 +119,8 @@ public class CrimeListFragment extends Fragment {
         } else {
             mAdapter.notifyDataSetChanged();
         }
+
+        updateSubtitle();
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
