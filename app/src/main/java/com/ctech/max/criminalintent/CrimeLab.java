@@ -68,5 +68,8 @@ public class CrimeLab {
         // we need a search string AND the arguments you want it to match
         // in this case, we want to find the row WHERE the UUID = the CrimeId
         String searchString = CrimeTable.Columns.UUID + " = ?";
+        String[] searchArgs = new String[] { crimeId };
+
+        mDatabase.update(CrimeTable.NAME, newValues, searchString, searchArgs);
     }
 }
