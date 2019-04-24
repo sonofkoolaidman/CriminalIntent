@@ -2,6 +2,7 @@ package com.ctech.max.criminalintent;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.ctech.max.criminalintent.database.CrimeBaseHelper;
@@ -71,5 +72,19 @@ public class CrimeLab {
         String[] searchArgs = new String[] { crimeId };
 
         mDatabase.update(CrimeTable.NAME, newValues, searchString, searchArgs);
+    }
+
+    private Cursor queryCrimes(String whereClause, String[] whereArgs) {
+
+        Cursor cursor = mDatabase.query(
+                CrimeTable.NAME,
+                null, //select ALL the columns
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null);
+
+        return cursor;
     }
 }

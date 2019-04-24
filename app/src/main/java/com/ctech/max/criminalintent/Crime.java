@@ -41,8 +41,13 @@ public class Crime {
 
     private boolean mSolved;  //has the crime been solved?
 
+    //the user can now specify their own UUID
+    public Crime(UUID id) {
+        mId = id;
+        mDate = new Date(); // default the crime date to right now
+    }
+    // automatically generates a gueranteed unique id if not provided one
     public Crime() {
-        mId = UUID.randomUUID(); //automatically generate a random id
-        mDate = new Date(); //defaults the date to right now
+        this(UUID.randomUUID());
     }
 }
