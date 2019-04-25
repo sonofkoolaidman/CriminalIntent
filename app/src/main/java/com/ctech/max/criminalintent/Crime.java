@@ -41,6 +41,8 @@ public class Crime {
 
     private boolean mSolved;  //has the crime been solved?
 
+    private String mSuspect;
+
     //the user can now specify their own UUID
     public Crime(UUID id) {
         mId = id;
@@ -49,5 +51,13 @@ public class Crime {
     // automatically generates a gueranteed unique id if not provided one
     public Crime() {
         this(UUID.randomUUID());
+    }
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String mSuspect) {
+        this.mSuspect = mSuspect;
     }
 }
