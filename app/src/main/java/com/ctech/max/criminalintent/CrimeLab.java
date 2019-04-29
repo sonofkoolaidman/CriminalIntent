@@ -10,6 +10,7 @@ import com.ctech.max.criminalintent.database.CrimeCursorWrapper;
 import com.ctech.max.criminalintent.database.CrimeDbSchema;
 import com.ctech.max.criminalintent.database.CrimeDbSchema.CrimeTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -106,6 +107,12 @@ public class CrimeLab {
         String[] searchArgs = new String[] { crimeId };
 
         mDatabase.update(CrimeTable.NAME, newValues, searchString, searchArgs);
+    }
+
+    // get a link to the file location.
+    public File getPhotoFile(Crime crime) {
+        File filesDir = mContext.getFilesDir();
+        return new File(filesDir, crime.getPhotoFilename());
     }
 
     private CrimeCursorWrapper queryCrimes(String whereClause, String[] whereArgs) {
